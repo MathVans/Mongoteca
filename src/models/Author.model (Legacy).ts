@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const AuthorSchema = new mongoose.Schema({
+const AuthorSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please inform the author name"],
@@ -30,3 +30,5 @@ export const AuthorSchema = new mongoose.Schema({
 }, {
     timestamps: true,
 });
+
+export default mongoose.model("Author", AuthorSchema);
