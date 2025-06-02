@@ -16,7 +16,7 @@ import { Author } from "./Author";
         allowMixed: Severity.ALLOW, // Or Severity.WARN / Severity.ERROR based on your preference
     },
 })
-export class Books {
+export class Book {
     @prop({
         required: [true, "Please inform the isbn"],
         unique: true,
@@ -38,7 +38,10 @@ export class Books {
     })
     author!: Ref<Author>;
 
-    @prop({ required: false })
+    @prop({
+        required: false,
+        ref: () => Author,
+    })
     coauthors?: Ref<Author>[];
 
     @prop({
@@ -53,8 +56,33 @@ export class Books {
     @prop({ required: false })
     pages?: number;
 
+    @prop({
+        required: true,
+        enum: [
+            "Ficção",
+            "Fantasia",
+            "Ciência",
+            "História",
+            "Biografia",
+            "Terror",
+            "Romance",
+            "Outro",
+        ],
+    })
+    genres!: string[];
+
     @prop({ required: false })
     metadata!: Record<string, any>;
+
+    @prop({
+        default: Date.now,
+    })
+    createdAt!: Date;
+
+    @prop({
+        default: Date.now,
+    })
+    updatedAt!: Date;
 }
 
-export const BookModel = getModelForClass(Books);
+export const BookModel = getModelForClass(Book);

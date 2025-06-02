@@ -3,15 +3,26 @@ import { AuthorModel } from "../models/Author";
 import { ApiError } from "../utils/api-error";
 
 export class AuthorService {
-    async getAuthors(page: number, limit: number) {
+    async getAllAuthors(page: number, limit: number) {
         if (page < 1 || limit < 1) {
             throw ApiError.badRequest(
                 "Page and limit must be positive numbers.",
             );
         }
         try {
-            const authors = await AuthorModel.find();
-            return authors;
+            const skip = (page - 1) * limit;
+            const authors = await AuthorModel.find({}).skip(skip).limit(limit);
+
+            // Opcional: Contar o número total de documentos para fins de paginação no frontend
+            const totalAuthors = await AuthorModel.countDocuments({});
+            const totalPages = Math.ceil(totalAuthors / limit);
+
+            return {
+                authors,
+                currentPage: page,
+                totalPages,
+                totalAuthors,
+            };
         } catch (err) {
         }
     }
