@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { connectDB } from "./database/db";
+import { connectDB } from "../infra/database/db";
 import express from "express";
 import dotenv from "dotenv";
 import router from "./routes/index.route";

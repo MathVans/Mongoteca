@@ -45,11 +45,7 @@ export class AuthorService {
             const existingAuthorWithNewName = await AuthorModel.findOne({
                 name: data.name,
             });
-            if (
-                existingAuthorWithNewName &&
-                existingAuthorWithNewName._id.toString() !==
-                    author._id.toString()
-            ) {
+            if (existingAuthorWithNewName) {
                 throw ApiError.conflict(
                     "There's another author with this new name",
                 );
@@ -102,7 +98,13 @@ export class AuthorService {
     }
 
     async getAuthorByName(name: string) {
-        return await AuthorModel.findOne({ name: name });
+        return await AuthorModel.find({
+            $or: [
+                { name: { $regex: name, $options: "i" } },
+                { nationality: { $regex: name, $options: "i" } },
+                { metadata: { $regex: name, $options: "i" } },
+            ],
+        });
     }
 
     async getAuthorsByBirthYear(birthYear: number) {
